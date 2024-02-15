@@ -19,15 +19,22 @@ class TimeAPIHandler(http.server.BaseHTTPRequestHandler):
         # Prepare response data
         time_zones = {
             'UTC': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'),
-            #"UTC": "2024-02-15 06:53:19",
-            'TorontoTime': torontoTime.strftime('%Y-%m-%d %H:%M:%S'),
+            'Toronto': torontoTime.strftime('%Y-%m-%d %H:%M:%S'),
             # Add more time zones as needed
             # 'EST': datetime.now(timezone(timedelta(hours=-5))).strftime('%Y-%m-%d %H:%M:%S'),
             # 'PST': datetime.now(timezone(timedelta(hours=-8))).strftime('%Y-%m-%d %H:%M:%S'),
         }
 
-        # Convert data to JSON
-        response_data = json.dumps(time_zones)
+        # Convert data to JSON with each city in a separate line
+        response_data = ""
+        for city, time in time_zones.items():
+            response_data += f'"{city}": "{time}",\n'
+
+        # Remove the trailing comma and newline character from the last line
+        response_data = response_data.rstrip(",\n")
+
+        # Add enclosing braces
+        response_data = "{" + response_data + "}"
 
         # Send JSON response
         self.wfile.write(response_data.encode('utf-8'))
