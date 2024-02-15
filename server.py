@@ -1,6 +1,6 @@
 import http.server
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 class TimeAPIHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -13,9 +13,14 @@ class TimeAPIHandler(http.server.BaseHTTPRequestHandler):
         # Get current time
         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+        utcTime = datetime.utcnow()
+        torontoTime = utcTime - timedelta(hours=5)
+
         # Prepare response data
         time_zones = {
-            'UTC': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+            'UTC': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'),
+            #"UTC": "2024-02-15 06:53:19",
+            'TorontoTime': torontoTime.strftime('%Y-%m-%d %H:%M:%S'),
             # Add more time zones as needed
             # 'EST': datetime.now(timezone(timedelta(hours=-5))).strftime('%Y-%m-%d %H:%M:%S'),
             # 'PST': datetime.now(timezone(timedelta(hours=-8))).strftime('%Y-%m-%d %H:%M:%S'),
